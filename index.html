@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAITA.AO — Estilo que fala por você</title>
+<meta name="description" content="NAITA.AO — Moda urbana e exclusiva em Luanda, Angola. Roupas masculinas, femininas e acessórios com estilo premium.">
+<meta name="keywords" content="moda angola, roupas luanda, fashion angola, NAITA, roupa exclusiva angola">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --white: #f8f6f1;
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dark: #8a6a1e;
+  --grey: #1a1a1a;
+  --grey-mid: #2d2d2d;
+  --grey-light: #888;
+  --off-white: #f0ede6;
+  --cream: #faf8f3;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99999;
+  transition: transform 0.1s;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99998;
+  transition: transform 0.15s, width 0.3s, height 0.3s, opacity 0.3s;
+  opacity: 0.6;
+}
+
+/* LOADER */
+#loader {
+  position: fixed; inset: 0;
+  background: var(--black);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.8s, visibility 0.8s;
+}
+#loader.done { opacity: 0; visibility: hidden; }
+.loader-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 10vw, 7rem);
+  letter-spacing: 0.3em;
+  color: var(--white);
+  overflow: hidden;
+}
+.loader-logo span { display: inline-block; animation: slideUp 1s cubic-bezier(0.16,1,0.3,1) forwards; opacity: 0; }
+.loader-logo span:nth-child(1) { animation-delay: 0.1s; }
+.loader-logo span:nth-child(2) { animation-delay: 0.2s; }
+.loader-logo span:nth-child(3) { animation-delay: 0.3s; }
+.loader-logo span:nth-child(4) { animation-delay: 0.4s; }
+.loader-logo span:nth-child(5) { animation-delay: 0.5s; }
+.loader-bar {
+  width: 200px; height: 1px;
+  background: var(--grey-mid);
+  margin-top: 2rem; overflow: hidden;
+}
+.loader-progress {
+  height: 100%; width: 0;
+  background: var(--gold);
+  animation: loadBar 1.8s ease forwards;
+}
+@keyframes loadBar { to { width: 100%; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1.5rem 4%;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.25em;
+  color: var(--white);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+}
+.nav-logo .dot { color: var(--gold); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  color: rgba(248,246,241,0.7);
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 400;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--gold);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover::after { width: 100%; }
+.nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+.nav-icon {
+  color: var(--white); background: none; border: none;
+  cursor: none; font-size: 1.1rem;
+  transition: color 0.3s; position: relative;
+}
+.nav-icon:hover { color: var(--gold); }
+.cart-count {
+  position: absolute; top: -6px; right: -8px;
+  background: var(--gold); color: var(--black);
+  font-size: 0.6rem; font-weight: 700;
+  width: 16px; height: 16px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; }
+.hamburger span { width: 24px; height: 1px; background: var(--white); transition: all 0.3s; }
+
+/* HERO */
+.hero {
+  height: 100vh; min-height: 700px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  position: relative; overflow: hidden;
+}
+.hero-left {
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 8% 6% 8% 8%;
+  position: relative; z-index: 2;
+}
+.hero-tag {
+  font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 2rem;
+}
+.hero-title .outline {
+  -webkit-text-stroke: 1px var(--white);
+  color: transparent;
+}
+.hero-title .gold { color: var(--gold); }
+.hero-sub {
+  font-size: 1rem; color: rgba(248,246,241,0.6);
+  max-width: 360px; line-height: 1.7;
+  font-weight: 300; margin-bottom: 3rem;
+}
+.hero-actions { display: flex; gap: 1.5rem; align-items: center; }
+.btn-primary {
+  background: var(--gold); color: var(--black);
+  padding: 1rem 2.5rem;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  border: none; cursor: none; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--gold-light);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-primary:hover::before { transform: scaleX(1); }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-secondary {
+  color: var(--white); background: none; border: none;
+  font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: none; text-decoration: none; padding: 1rem 0;
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  transition: color 0.3s;
+}
+.btn-secondary:hover { color: var(--gold); }
+.btn-secondary .arrow { transition: transform 0.3s; }
+.btn-secondary:hover .arrow { transform: translateX(4px); }
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 4rem;
+  padding-top: 3rem; border-top: 1px solid rgba(248,246,241,0.1);
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem; color: var(--gold); letter-spacing: 0.05em;
+}
+.stat-label { font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(248,246,241,0.4); text-transform: uppercase; margin-top: 0.25rem; }
+
+.hero-right {
+  position: relative; overflow: hidden;
+}
+.hero-img-container {
+  width: 100%; height: 100%;
+  background: var(--grey);
+  position: relative; overflow: hidden;
+}
+.hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85) contrast(1.05);
+  transition: transform 8s ease;
+}
+.hero-img-container:hover .hero-img { transform: scale(1.03); }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,10,10,0.3) 0%, transparent 60%);
+}
+.hero-img-label {
+  position: absolute; bottom: 2rem; left: 2rem;
+  font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(248,246,241,0.5);
+  text-transform: uppercase;
+}
+.hero-scroll-hint {
+  position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(248,246,241,0.4);
+  text-transform: uppercase; z-index: 3;
+  animation: bounce 2s ease infinite;
+}
+.hero-scroll-hint::after {
+  content: ''; width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+
+/* TICKER */
+.ticker {
+  background: var(--gold);
+  padding: 0.75rem 0;
+  overflow: hidden; white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex; animation: ticker 20s linear infinite;
+}
+.ticker-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem; letter-spacing: 0.25em;
+  color: var(--black); padding: 0 3rem;
+}
+.ticker-sep { color: rgba(10,10,10,0.4); }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* SECTIONS COMMON */
+section { padding: 8rem 8%; }
+.section-tag {
+  font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.section-tag::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 0.95; letter-spacing: 0.04em;
+  color: var(--white);
+}
+.section-title .outline {
+  -webkit-text-stroke: 1px var(--white);
+  color: transparent;
+}
+
+/* CATEGORIES */
+.categories-section { background: var(--black); }
+.categories-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 4rem;
+}
+.categories-grid { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 1.5rem; }
+.cat-card {
+  position: relative; overflow: hidden;
+  aspect-ratio: 3/4; cursor: none;
+  background: var(--grey);
+}
+.cat-card:nth-child(2) { margin-top: 3rem; }
+.cat-card:nth-child(3) { margin-top: -1rem; }
+.cat-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  filter: brightness(0.7);
+}
+.cat-card:hover .cat-img { transform: scale(1.05); }
+.cat-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 50%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 2rem;
+}
+.cat-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; letter-spacing: 0.1em;
+  color: var(--white); margin-bottom: 0.5rem;
+}
+.cat-count { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+.cat-arrow {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(248,246,241,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-size: 1.2rem;
+  transform: translateY(-10px); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.cat-card:hover .cat-arrow { transform: translateY(0); opacity: 1; }
+.cat-card:hover .cat-arrow { border-color: var(--gold); color: var(--gold); }
+
+/* FEATURED PRODUCTS */
+.products-section { background: var(--grey); }
+.products-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.filter-tabs {
+  display: flex; gap: 0; margin-bottom: 3rem;
+  border-bottom: 1px solid rgba(248,246,241,0.1);
+}
+.filter-tab {
+  background: none; border: none;
+  font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(248,246,241,0.4); cursor: none;
+  padding: 0.75rem 1.5rem; transition: color 0.3s;
+  position: relative;
+}
+.filter-tab::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 1px; background: var(--gold);
+  transform: scaleX(0); transition: transform 0.3s;
+}
+.filter-tab.active, .filter-tab:hover { color: var(--white); }
+.filter-tab.active::after { transform: scaleX(1); }
+.products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.product-card {
+  background: var(--black); cursor: none; position: relative; overflow: hidden;
+}
+.product-img-wrap {
+  position: relative; aspect-ratio: 3/4; overflow: hidden;
+  background: var(--grey-mid);
+}
+.product-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.product-card:hover .product-img { transform: scale(1.07); }
+.product-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  background: var(--gold); color: var(--black);
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+  padding: 0.3rem 0.6rem; text-transform: uppercase;
+}
+.product-badge.new { background: var(--white); }
+.product-actions {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,10,0.9);
+  padding: 1rem;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  display: flex; gap: 0.75rem;
+}
+.product-card:hover .product-actions { transform: translateY(0); }
+.btn-cart {
+  flex: 1; background: var(--gold); color: var(--black);
+  border: none; padding: 0.75rem;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: none; transition: background 0.3s;
+}
+.btn-cart:hover { background: var(--gold-light); }
+.btn-wish {
+  width: 40px; height: 40px; background: rgba(248,246,241,0.1);
+  border: 1px solid rgba(248,246,241,0.2);
+  color: var(--white); font-size: 1rem; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.btn-wish:hover { background: var(--white); color: var(--black); }
+.product-info { padding: 1.25rem 0.5rem; }
+.product-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; color: var(--white); margin-bottom: 0.5rem;
+  font-weight: 400; letter-spacing: 0.02em;
+}
+.product-meta { display: flex; align-items: center; justify-content: space-between; }
+.product-price {
+  font-size: 0.95rem; color: var(--gold); font-weight: 500;
+}
+.product-price .old {
+  font-size: 0.8rem; color: var(--grey-light);
+  text-decoration: line-through; margin-left: 0.5rem;
+}
+.product-stars { color: var(--gold); font-size: 0.7rem; letter-spacing: 2px; }
+.view-all-wrap { text-align: center; margin-top: 4rem; }
+
+/* MARQUEE BANNER */
+.marquee-section {
+  padding: 5rem 0; background: var(--black);
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  overflow: hidden;
+}
+.marquee-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  letter-spacing: 0.05em; white-space: nowrap;
+  display: inline-flex; animation: marquee 12s linear infinite;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201,168,76,0.3);
+}
+.marquee-text .highlight {
+  color: var(--gold);
+  -webkit-text-stroke: 0;
+  margin: 0 2rem;
+}
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* PROMO BANNER */
+.promo-section {
+  background: var(--gold);
+  padding: 5rem 8%;
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 4rem;
+}
+.promo-tag {
+  font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(10,10,10,0.6); margin-bottom: 1rem;
+}
+.promo-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem,6vw,5rem);
+  color: var(--black); letter-spacing: 0.04em; line-height: 0.95;
+}
+.promo-sub { font-size: 1rem; color: rgba(10,10,10,0.7); margin-top: 1rem; max-width: 400px; }
+.btn-dark {
+  background: var(--black); color: var(--gold);
+  padding: 1.25rem 3rem;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  border: none; cursor: none; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  white-space: nowrap; transition: all 0.3s;
+}
+.btn-dark:hover { background: var(--grey); }
+
+/* TESTIMONIALS */
+.testimonials-section { background: var(--grey); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 4rem; }
+.testimonial-card {
+  background: var(--black); padding: 2.5rem;
+  border: 1px solid rgba(201,168,76,0.1);
+  position: relative; transition: border-color 0.3s;
+}
+.testimonial-card:hover { border-color: rgba(201,168,76,0.4); }
+.testimonial-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; color: var(--gold); line-height: 1;
+  margin-bottom: 1.5rem; opacity: 0.6;
+}
+.testimonial-text {
+  font-size: 0.95rem; color: rgba(248,246,241,0.7);
+  line-height: 1.8; margin-bottom: 2rem;
+  font-weight: 300;
+}
+.testimonial-author { display: flex; align-items: center; gap: 1rem; }
+.author-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--grey-mid); overflow: hidden;
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--gold);
+}
+.author-name { font-size: 0.85rem; font-weight: 500; color: var(--white); }
+.author-city { font-size: 0.7rem; color: var(--grey-light); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+.author-stars { color: var(--gold); font-size: 0.75rem; margin-top: 3px; }
+
+/* ABOUT SECTION */
+.about-section {
+  background: var(--black);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8rem; align-items: center;
+}
+.about-img-side { position: relative; }
+.about-img-main {
+  width: 100%; aspect-ratio: 4/5;
+  object-fit: cover; filter: brightness(0.85);
+  display: block;
+}
+.about-img-float {
+  position: absolute; bottom: -3rem; right: -3rem;
+  width: 55%; aspect-ratio: 1;
+  object-fit: cover; filter: brightness(0.9);
+  border: 4px solid var(--black);
+}
+.about-year {
+  position: absolute; top: 2rem; left: -2rem;
+  background: var(--gold); color: var(--black);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem; letter-spacing: 0.2em;
+  padding: 0.5rem 1rem;
+}
+.about-values { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+.value-item { padding-left: 1rem; border-left: 2px solid var(--gold); }
+.value-name { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+.value-text { font-size: 0.85rem; color: rgba(248,246,241,0.6); line-height: 1.6; font-weight: 300; }
+
+/* CONTACT SECTION */
+.contact-section {
+  background: var(--grey);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8rem; align-items: start;
+}
+.contact-form-group { margin-bottom: 1.5rem; }
+.contact-form-group label {
+  display: block; font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--grey-light); margin-bottom: 0.75rem;
+}
+.contact-form-group input,
+.contact-form-group textarea,
+.contact-form-group select {
+  width: 100%; background: rgba(248,246,241,0.05);
+  border: 1px solid rgba(248,246,241,0.1);
+  padding: 1rem 1.25rem; color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  transition: border-color 0.3s; outline: none;
+  -webkit-appearance: none;
+}
+.contact-form-group input:focus,
+.contact-form-group textarea:focus,
+.contact-form-group select:focus { border-color: var(--gold); }
+.contact-form-group textarea { resize: none; height: 120px; }
+.contact-info-item {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+.contact-icon {
+  width: 44px; height: 44px; min-width: 44px;
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--gold);
+}
+.contact-info-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey-light); margin-bottom: 0.4rem; }
+.contact-info-val { font-size: 0.95rem; color: var(--white); }
+.whatsapp-btn {
+  display: inline-flex; align-items: center; gap: 1rem;
+  background: #25D366; color: white;
+  padding: 1rem 2rem; text-decoration: none;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: background 0.3s; cursor: none; margin-top: 2rem;
+}
+.whatsapp-btn:hover { background: #1ebe57; }
+
+/* FOOTER */
+footer {
+  background: #050505;
+  padding: 6rem 8% 2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+.footer-brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem; letter-spacing: 0.2em; color: var(--white); margin-bottom: 1rem;
+}
+.footer-brand-name .dot { color: var(--gold); }
+.footer-brand-desc { font-size: 0.85rem; color: rgba(248,246,241,0.4); line-height: 1.8; max-width: 280px; font-weight: 300; }
+.footer-socials { display: flex; gap: 1rem; margin-top: 2rem; }
+.social-link {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(248,246,241,0.15);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(248,246,241,0.5); text-decoration: none; font-size: 0.9rem;
+  transition: all 0.3s;
+}
+.social-link:hover { border-color: var(--gold); color: var(--gold); }
+.footer-col-title {
+  font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 2rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+.footer-links a {
+  font-size: 0.85rem; color: rgba(248,246,241,0.4); text-decoration: none;
+  transition: color 0.3s; letter-spacing: 0.03em;
+}
+.footer-links a:hover { color: var(--white); }
+.footer-bottom {
+  padding-top: 2rem;
+  border-top: 1px solid rgba(248,246,241,0.07);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-copy { font-size: 0.75rem; color: rgba(248,246,241,0.25); letter-spacing: 0.05em; }
+.footer-pay { display: flex; gap: 1rem; }
+.pay-badge {
+  background: rgba(248,246,241,0.06); padding: 0.4rem 0.9rem;
+  font-size: 0.7rem; letter-spacing: 0.1em; color: rgba(248,246,241,0.4); text-transform: uppercase;
+}
+
+/* CART SIDEBAR */
+.cart-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); z-index: 2000;
+  opacity: 0; visibility: hidden;
+  transition: all 0.4s;
+}
+.cart-overlay.open { opacity: 1; visibility: visible; }
+.cart-sidebar {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: min(440px, 100vw);
+  background: var(--grey);
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  display: flex; flex-direction: column;
+  border-left: 1px solid rgba(201,168,76,0.15);
+}
+.cart-overlay.open .cart-sidebar { transform: translateX(0); }
+.cart-header {
+  padding: 2rem; border-bottom: 1px solid rgba(248,246,241,0.1);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cart-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem; letter-spacing: 0.15em;
+}
+.cart-close {
+  background: none; border: none; color: var(--white);
+  font-size: 1.5rem; cursor: none; transition: color 0.3s;
+  line-height: 1;
+}
+.cart-close:hover { color: var(--gold); }
+.cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+.cart-item {
+  display: grid; grid-template-columns: 80px 1fr auto;
+  gap: 1rem; padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(248,246,241,0.07);
+}
+.cart-item-img { width: 80px; height: 100px; object-fit: cover; background: var(--grey-mid); }
+.cart-item-name { font-size: 0.9rem; font-weight: 400; margin-bottom: 0.4rem; }
+.cart-item-meta { font-size: 0.75rem; color: var(--grey-light); letter-spacing: 0.1em; }
+.cart-item-price { font-size: 0.9rem; color: var(--gold); white-space: nowrap; }
+.cart-qty {
+  display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem;
+}
+.qty-btn {
+  width: 28px; height: 28px; background: rgba(248,246,241,0.08);
+  border: 1px solid rgba(248,246,241,0.15);
+  color: var(--white); font-size: 1rem; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.qty-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
+.qty-num { font-size: 0.9rem; min-width: 20px; text-align: center; }
+.cart-remove {
+  background: none; border: none; color: rgba(248,246,241,0.3);
+  font-size: 1rem; cursor: none; transition: color 0.3s; align-self: flex-start;
+}
+.cart-remove:hover { color: #e05; }
+.cart-footer {
+  padding: 2rem; border-top: 1px solid rgba(248,246,241,0.1);
+}
+.cart-total {
+  display: flex; justify-content: space-between; margin-bottom: 1.5rem;
+  font-size: 1rem; color: var(--white);
+}
+.cart-total .total-label { letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey-light); }
+.cart-total .total-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 0.05em; }
+.cart-empty { text-align: center; padding: 4rem 2rem; }
+.cart-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+.cart-empty-text { color: var(--grey-light); font-size: 0.9rem; }
+
+/* PRODUCT MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 3000;
+  opacity: 0; visibility: hidden;
+  transition: all 0.4s; overflow-y: auto;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-content {
+  background: var(--grey);
+  max-width: 900px; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.modal-overlay.open .modal-content { transform: scale(1); }
+.modal-gallery { background: var(--grey-mid); }
+.modal-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+.modal-info { padding: 3rem; display: flex; flex-direction: column; }
+.modal-close {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  background: rgba(10,10,10,0.7); border: none;
+  color: var(--white); width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none; font-size: 1.2rem; transition: all 0.3s;
+}
+.modal-close:hover { background: var(--gold); color: var(--black); }
+.modal-cat { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+.modal-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: var(--white); margin-bottom: 0.75rem; line-height: 1.2; }
+.modal-price { font-size: 1.5rem; color: var(--gold); margin-bottom: 1.5rem; }
+.modal-desc { font-size: 0.85rem; color: rgba(248,246,241,0.6); line-height: 1.8; margin-bottom: 2rem; flex: 1; }
+.size-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey-light); margin-bottom: 0.75rem; }
+.size-options { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.size-btn {
+  width: 44px; height: 44px;
+  border: 1px solid rgba(248,246,241,0.2);
+  background: none; color: var(--white);
+  font-size: 0.8rem; letter-spacing: 0.05em;
+  cursor: none; transition: all 0.3s;
+}
+.size-btn:hover, .size-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); }
+.color-options { display: flex; gap: 0.75rem; margin-bottom: 2rem; }
+.color-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid transparent; cursor: none;
+  transition: border-color 0.3s;
+}
+.color-btn.active { border-color: var(--gold); transform: scale(1.1); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--gold); color: var(--black);
+  padding: 1rem 2rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+  z-index: 9999; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* FADE IN ANIMATION */
+.fade-in {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* MOBILE */
+@media (max-width: 1024px) {
+  .products-grid { grid-template-columns: repeat(3, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  section { padding: 5rem 5%; }
+  nav { padding: 1.25rem 5%; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .hero-left { padding: 100px 5% 3rem; }
+  .hero-right { height: 60vw; min-height: 300px; }
+  .hero-stats { gap: 2rem; }
+  .categories-grid { grid-template-columns: 1fr 1fr; }
+  .categories-grid .cat-card:nth-child(3) { display: none; }
+  .cat-card:nth-child(2) { margin-top: 0; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .promo-section { grid-template-columns: 1fr; gap: 2rem; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .about-section { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 5%; }
+  .about-img-float { display: none; }
+  .contact-section { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 5%; }
+  .footer-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .modal-content { grid-template-columns: 1fr; }
+  .modal-gallery { display: none; }
+  .categories-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .products-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: clamp(3rem, 15vw, 5rem); }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
+  .filter-tabs { flex-wrap: wrap; }
+}
+
+/* MOBILE NAV */
+.mobile-nav {
+  position: fixed; inset: 0; background: var(--black); z-index: 1500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2rem; transform: translateX(-100%);
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a {
+  font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
+  letter-spacing: 0.1em; color: var(--white); text-decoration: none;
+  transition: color 0.3s;
+}
+.mobile-nav a:hover { color: var(--gold); }
+
+/* CHECKOUT SECTION */
+.checkout-section {
+  background: var(--black); padding: 8rem 8%;
+  display: none;
+}
+.checkout-section.active { display: block; }
+.checkout-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; }
+.checkout-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.05em; margin-bottom: 3rem; }
+.payment-options { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.payment-option {
+  display: flex; align-items: center; gap: 1.25rem;
+  padding: 1.25rem; border: 1px solid rgba(248,246,241,0.1);
+  cursor: none; transition: border-color 0.3s;
+}
+.payment-option:hover { border-color: var(--gold); }
+.payment-option input[type=radio] { accent-color: var(--gold); transform: scale(1.3); cursor: none; }
+.payment-icon { font-size: 1.5rem; }
+.payment-name { font-size: 0.9rem; font-weight: 500; }
+.payment-desc { font-size: 0.75rem; color: var(--grey-light); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">
+    <span>N</span><span>A</span><span>I</span><span>T</span><span>A</span>
+  </div>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#home" onclick="closeMobileNav()">Início</a>
+  <a href="#produtos" onclick="closeMobileNav()">Produtos</a>
+  <a href="#sobre" onclick="closeMobileNav()">Sobre</a>
+  <a href="#contato" onclick="closeMobileNav()">Contato</a>
+</div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart(event)">
+  <div class="cart-sidebar">
+    <div class="cart-header">
+      <span class="cart-title">CARRINHO</span>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span class="total-label">Total</span>
+        <span class="total-val" id="cartTotal">0 Kz</span>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="openCheckout()">
+        <span>Finalizar Compra</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-gallery">
+      <img id="modalImg" class="modal-img" src="" alt="">
+    </div>
+    <div class="modal-info">
+      <div class="modal-cat" id="modalCat"></div>
+      <h2 class="modal-name" id="modalName"></h2>
+      <div class="modal-price" id="modalPrice"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="size-label">TAMANHO</div>
+      <div class="size-options">
+        <button class="size-btn active" onclick="selectSize(this)">XS</button>
+        <button class="size-btn" onclick="selectSize(this)">S</button>
+        <button class="size-btn" onclick="selectSize(this)">M</button>
+        <button class="size-btn" onclick="selectSize(this)">L</button>
+        <button class="size-btn" onclick="selectSize(this)">XL</button>
+      </div>
+      <div class="size-label">COR</div>
+      <div class="color-options">
+        <div class="color-btn active" style="background:#1a1a1a;border-color:var(--gold)" onclick="selectColor(this)"></div>
+        <div class="color-btn" style="background:#f8f6f1" onclick="selectColor(this)"></div>
+        <div class="color-btn" style="background:#c9a84c" onclick="selectColor(this)"></div>
+        <div class="color-btn" style="background:#8B4513" onclick="selectColor(this)"></div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:auto" onclick="addCurrentToCart()">
+        <span>Adicionar ao Carrinho</span>
+      </button>
+      <a href="https://wa.me/244923000000" target="_blank" class="btn-secondary" style="justify-content:center;margin-top:1rem">
+        <span>Encomendar via WhatsApp</span> <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#home" class="nav-logo">NAITA<span class="dot">.</span>AO</a>
+  <ul class="nav-links">
+    <li><a href="#home">Início</a></li>
+    <li><a href="#produtos">Produtos</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon" onclick="toggleCart()" title="Carrinho">
+      🛍 <span class="cart-count" id="cartCount" style="display:none">0</span>
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-tag">Nova Coleção 2025</div>
+    <h1 class="hero-title">
+      ESTILO<br>
+      <span class="outline">QUE</span><br>
+      <span class="gold">FALA</span><br>
+      POR VOCÊ
+    </h1>
+    <p class="hero-sub">Moda urbana premium feita para os que ditam tendências em Luanda e além.</p>
+    <div class="hero-actions">
+      <a href="#produtos" class="btn-primary"><span>Comprar Agora</span> <span>→</span></a>
+      <a href="#sobre" class="btn-secondary">Nossa História <span class="arrow">→</span></a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">2K+</div>
+        <div class="stat-label">Clientes</div>
+      </div>
+      <div>
+        <div class="stat-num">150+</div>
+        <div class="stat-label">Produtos</div>
+      </div>
+      <div>
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Avaliação</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-container">
+      <img class="hero-img" src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=900&q=80" alt="NAITA Fashion">
+      <div class="hero-overlay"></div>
+      <div class="hero-img-label">Coleção Urbana · Luanda 2025</div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">Scroll</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">NOVA COLEÇÃO 2025</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">FRETE GRÁTIS LUANDA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">NAITA.AO — MODA ANGOLANA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">ATÉ 30% OFF NA 1ª COMPRA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">NOVA COLEÇÃO 2025</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">FRETE GRÁTIS LUANDA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">NAITA.AO — MODA ANGOLANA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+    <span class="ticker-item">ATÉ 30% OFF NA 1ª COMPRA</span>
+    <span class="ticker-item ticker-sep">◆</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories-section fade-in">
+  <div class="categories-header">
+    <div>
+      <div class="section-tag">Explorar</div>
+      <h2 class="section-title">NOSSAS<br><span class="outline">CATEGORIAS</span></h2>
+    </div>
+    <a href="#produtos" class="btn-secondary">Ver Tudo <span class="arrow">→</span></a>
+  </div>
+  <div class="categories-grid">
+    <div class="cat-card">
+      <img class="cat-img" src="https://images.unsplash.com/photo-1520975954732-35dd22299614?w=600&q=80" alt="Masculino">
+      <div class="cat-overlay">
+        <div class="cat-name">MASCULINO</div>
+        <div class="cat-count">48 Produtos</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <img class="cat-img" src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&q=80" alt="Feminino">
+      <div class="cat-overlay">
+        <div class="cat-name">FEMININO</div>
+        <div class="cat-count">62 Produtos</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <img class="cat-img" src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80" alt="Acessórios">
+      <div class="cat-overlay">
+        <div class="cat-name">ACESSÓRIOS</div>
+        <div class="cat-count">35 Produtos</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="products-section fade-in" id="produtos">
+  <div class="products-header">
+    <div>
+      <div class="section-tag">Destaque</div>
+      <h2 class="section-title">PRODUTOS<br><span class="outline">EM ALTA</span></h2>
+    </div>
+  </div>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterProducts('todos', this)">Todos</button>
+    <button class="filter-tab" onclick="filterProducts('masculino', this)">Masculino</button>
+    <button class="filter-tab" onclick="filterProducts('feminino', this)">Feminino</button>
+    <button class="filter-tab" onclick="filterProducts('acessorios', this)">Acessórios</button>
+    <button class="filter-tab" onclick="filterProducts('sale', this)">Sale</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+  <div class="view-all-wrap">
+    <a href="#produtos" class="btn-secondary" style="font-size:0.8rem">Ver Todos os Produtos <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-text">
+    NAITA<span class="highlight">·</span>AO &nbsp;&nbsp; URBAN FASHION &nbsp;&nbsp; LUANDA &nbsp;&nbsp; ANGOLA &nbsp;&nbsp; <span class="highlight">2025</span> &nbsp;&nbsp; STYLE IS POWER &nbsp;&nbsp; NAITA<span class="highlight">·</span>AO &nbsp;&nbsp; URBAN FASHION &nbsp;&nbsp; LUANDA &nbsp;&nbsp; ANGOLA &nbsp;&nbsp; <span class="highlight">2025</span> &nbsp;&nbsp; STYLE IS POWER &nbsp;&nbsp;
+  </div>
+</div>
+
+<!-- PROMO -->
+<div class="promo-section fade-in">
+  <div>
+    <div class="promo-tag">Oferta Especial · Tempo Limitado</div>
+    <h2 class="promo-title">30% OFF<br>NA PRIMEIRA<br>COMPRA</h2>
+    <p class="promo-sub">Use o código <strong>NAITA30</strong> e garanta desconto exclusivo na sua primeira encomenda.</p>
+  </div>
+  <a href="#produtos" class="btn-dark"><span>Aproveitar Agora</span> <span>→</span></a>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section fade-in">
+  <div class="section-tag">Depoimentos</div>
+  <h2 class="section-title">O QUE DIZEM<br><span class="outline">NOSSOS CLIENTES</span></h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">A qualidade das peças é impressionante. Recebi o meu pedido rápido e o atendimento foi excelente. Já é a minha loja preferida em Luanda!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">MK</div>
+        <div>
+          <div class="author-name">Maria Kimbembe</div>
+          <div class="author-city">Luanda, Angola</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">Finalmente uma marca angolana com estilo internacional! As roupas têm caimento perfeito e o design é único. Recomendo a todos.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JM</div>
+        <div>
+          <div class="author-name">João Mateus</div>
+          <div class="author-city">Luanda, Angola</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">Comprei via WhatsApp e foi super fácil! Entrega rápida, embalagem linda e o produto superou as minhas expectativas. NAITA é top!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">AL</div>
+        <div>
+          <div class="author-name">Ana Lopes</div>
+          <div class="author-city">Luanda, Angola</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section fade-in" id="sobre">
+  <div class="about-img-side">
+    <img class="about-img-main" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=700&q=80" alt="NAITA Story">
+    <img class="about-img-float" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&q=80" alt="NAITA Store">
+    <div class="about-year">EST. 2020</div>
+  </div>
+  <div class="about-content">
+    <div class="section-tag">Nossa História</div>
+    <h2 class="section-title">NAITA<br><span class="outline">NASCEU EM</span><br><span style="color:var(--gold)">LUANDA</span></h2>
+    <p style="font-size:0.95rem;color:rgba(248,246,241,0.6);line-height:1.9;margin-top:2rem;font-weight:300">
+      A NAITA.AO nasceu em 2020 com uma visão clara: criar uma marca de moda urbana genuinamente angolana, que reflita a energia, a criatividade e a identidade cultural de Angola para o mundo.
+    </p>
+    <p style="font-size:0.95rem;color:rgba(248,246,241,0.6);line-height:1.9;margin-top:1rem;font-weight:300">
+      Cada peça é cuidadosamente desenhada para quem vive intensamente — para os jovens que constroem o futuro de Luanda com estilo, confiança e autenticidade.
+    </p>
+    <div class="about-values">
+      <div class="value-item">
+        <div class="value-name">Missão</div>
+        <div class="value-text">Democratizar a moda premium em Angola com peças exclusivas e acessíveis.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-name">Visão</div>
+        <div class="value-text">Ser a maior marca de moda urbana de origem angolana em África.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-name">Qualidade</div>
+        <div class="value-text">Materiais premium selecionados para durabilidade e conforto máximos.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-name">Identidade</div>
+        <div class="value-text">Design que celebra a cultura e o espírito angolano contemporâneo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section fade-in" id="contato">
+  <div>
+    <div class="section-tag">Contacto</div>
+    <h2 class="section-title">FALE<br><span class="outline">CONNOSCO</span></h2>
+    <p style="font-size:0.9rem;color:rgba(248,246,241,0.5);margin-top:1.5rem;margin-bottom:3rem;font-weight:300">Tem dúvidas, sugestões ou quer fazer uma encomenda especial? Estamos aqui para si.</p>
+    <div class="contact-info-item">
+      <div class="contact-icon">📍</div>
+      <div>
+        <div class="contact-info-label">Localização</div>
+        <div class="contact-info-val">Talatona, Luanda, Angola</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="contact-icon">📱</div>
+      <div>
+        <div class="contact-info-label">Telefone / WhatsApp</div>
+        <div class="contact-info-val">+244 923 000 000</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="contact-icon">✉️</div>
+      <div>
+        <div class="contact-info-label">Email</div>
+        <div class="contact-info-val">info@naita.ao</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="contact-icon">🕐</div>
+      <div>
+        <div class="contact-info-label">Horário</div>
+        <div class="contact-info-val">Seg–Sáb: 09h–18h</div>
+      </div>
+    </div>
+    <a href="https://wa.me/244923000000" target="_blank" class="whatsapp-btn">
+      <span>💬</span> Falar no WhatsApp
+    </a>
+  </div>
+  <div>
+    <div class="contact-form-group">
+      <label>Nome Completo</label>
+      <input type="text" placeholder="Ex: Maria Silva">
+    </div>
+    <div class="contact-form-group">
+      <label>Email</label>
+      <input type="email" placeholder="seu@email.com">
+    </div>
+    <div class="contact-form-group">
+      <label>Telefone</label>
+      <input type="tel" placeholder="+244 9XX XXX XXX">
+    </div>
+    <div class="contact-form-group">
+      <label>Mensagem</label>
+      <textarea placeholder="Como podemos ajudar?"></textarea>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center" onclick="submitContact()">
+      <span>Enviar Mensagem</span> <span>→</span>
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">NAITA<span class="dot">.</span>AO</div>
+      <p class="footer-brand-desc">Moda urbana premium de Luanda para o mundo. Vistam-se com a essência de Angola.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-link" title="Instagram">IG</a>
+        <a href="#" class="social-link" title="Facebook">FB</a>
+        <a href="#" class="social-link" title="TikTok">TK</a>
+        <a href="https://wa.me/244923000000" class="social-link" title="WhatsApp">WA</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Loja</div>
+      <ul class="footer-links">
+        <li><a href="#produtos">Masculino</a></li>
+        <li><a href="#produtos">Feminino</a></li>
+        <li><a href="#produtos">Acessórios</a></li>
+        <li><a href="#produtos">Promoções</a></li>
+        <li><a href="#produtos">Novidades</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Ajuda</div>
+      <ul class="footer-links">
+        <li><a href="#">Guia de Tamanhos</a></li>
+        <li><a href="#">Política de Entrega</a></li>
+        <li><a href="#">Devoluções</a></li>
+        <li><a href="#">Rastrear Pedido</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Empresa</div>
+      <ul class="footer-links">
+        <li><a href="#sobre">Sobre Nós</a></li>
+        <li><a href="#contato">Contacto</a></li>
+        <li><a href="#">Termos de Uso</a></li>
+        <li><a href="#">Privacidade</a></li>
+        <li><a href="#">Parcerias</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 NAITA.AO — Todos os direitos reservados · Luanda, Angola</div>
+    <div class="footer-pay">
+      <div class="pay-badge">Multicaixa</div>
+      <div class="pay-badge">Transferência</div>
+      <div class="pay-badge">Cash</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// DATA
+const products = [
+  { id:1, name:"Casaco Urban Essential", price:28500, oldPrice:38000, cat:"masculino", badge:"Sale", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80", desc:"Casaco urbano premium em tecido resistente e confortável. Design minimalista para o homem moderno." },
+  { id:2, name:"Vestido Noir Elegance", price:19500, oldPrice:null, cat:"feminino", badge:"Novo", img:"https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500&q=80", desc:"Vestido de noite sofisticado com corte moderno e acabamento premium. Perfeito para ocasiões especiais." },
+  { id:3, name:"Colar Golden Thread", price:8500, oldPrice:null, cat:"acessorios", badge:"Novo", img:"https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80", desc:"Colar artesanal em banhado a ouro com design exclusivo inspirado na cultura angolana." },
+  { id:4, name:"Calça Slim Fit Black", price:16800, oldPrice:22000, cat:"masculino", badge:"Sale", img:"https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80", desc:"Calça slim fit em algodão premium, corte moderno e versatilidade para qualquer ocasião." },
+  { id:5, name:"Top Cropped Dourado", price:12000, oldPrice:null, cat:"feminino", badge:null, img:"https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500&q=80", desc:"Top cropped com detalhes dourados. Para a mulher que não passa despercebida." },
+  { id:6, name:"Óculos Shade Urban", price:9500, oldPrice:null, cat:"acessorios", badge:null, img:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&q=80", desc:"Óculos de sol com lentes espelhadas e armação premium. Proteção UV400 garantida." },
+  { id:7, name:"Hoodie NAITA Classic", price:22000, oldPrice:28000, cat:"masculino", badge:"Sale", img:"https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=500&q=80", desc:"Hoodie oversized com o logo NAITA bordado. Conforto máximo para o dia a dia urbano." },
+  { id:8, name:"Saia Midi Premium", price:17500, oldPrice:null, cat:"feminino", badge:"Novo", img:"https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80", desc:"Saia midi com corte assimétrico e tecido fluido. Elegância casual para o quotidiano." },
+];
+
+let cart = [];
+let activeCategory = 'todos';
+let currentProduct = null;
+
+// RENDER PRODUCTS
+function renderProducts(category='todos') {
+  const grid = document.getElementById('productsGrid');
+  const filtered = category === 'todos' ? products : products.filter(p => p.cat === category);
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+        ${p.badge ? `<div class="product-badge ${p.badge==='Novo'?'new':''}">${p.badge}</div>` : ''}
+        <div class="product-actions">
+          <button class="btn-cart" onclick="addToCart(${p.id})">+ Adicionar</button>
+          <button class="btn-wish" onclick="openModal(${p.id})">🔍</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">
+          <div class="product-price">
+            ${p.price.toLocaleString('pt-AO')} Kz
+            ${p.oldPrice ? `<span class="old">${p.oldPrice.toLocaleString('pt-AO')} Kz</span>` : ''}
+          </div>
+          <div class="product-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+// CART
+function addToCart(id) {
+  const product = products.find(p => p.id === id);
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...product, qty: 1 });
+  updateCartUI();
+  showToast(`"${product.name}" adicionado ao carrinho ✓`);
+  if (currentProduct && currentProduct.id === id) closeModalDirect();
+}
+
+function addCurrentToCart() {
+  if (currentProduct) addToCart(currentProduct.id);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartUI();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id);
+    else updateCartUI();
+  }
+}
+
+function updateCartUI() {
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = count;
+  countEl.style.display = count > 0 ? 'flex' : 'none';
+  const itemsEl = document.getElementById('cartItems');
+  const footerEl = document.getElementById('cartFooter');
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛍</div><p class="cart-empty-text">O seu carrinho está vazio</p></div>`;
+    footerEl.style.display = 'none';
+  } else {
+    itemsEl.innerHTML = cart.map(c => `
+      <div class="cart-item">
+        <img class="cart-item-img" src="${c.img}" alt="${c.name}">
+        <div>
+          <div class="cart-item-name">${c.name}</div>
+          <div class="cart-item-meta">${c.cat.toUpperCase()}</div>
+          <div class="cart-qty">
+            <button class="qty-btn" onclick="changeQty(${c.id}, -1)">−</button>
+            <span class="qty-num">${c.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${c.id}, 1)">+</button>
+          </div>
+        </div>
+        <div>
+          <div class="cart-item-price">${(c.price * c.qty).toLocaleString('pt-AO')} Kz</div>
+          <button class="cart-remove" onclick="removeFromCart(${c.id})">✕</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('cartTotal').textContent = total.toLocaleString('pt-AO') + ' Kz';
+    footerEl.style.display = 'block';
+  }
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+function closeCart(e) {
+  if (e.target === document.getElementById('cartOverlay')) toggleCart();
+}
+
+function openCheckout() {
+  toggleCart();
+  showToast('Redirecionando para checkout... 📦');
+  setTimeout(() => {
+    window.open(`https://wa.me/244923000000?text=${encodeURIComponent('Olá! Quero finalizar a minha compra NAITA.AO:\n' + cart.map(c => `• ${c.name} x${c.qty} — ${(c.price*c.qty).toLocaleString('pt-AO')} Kz`).join('\n') + `\nTotal: ${cart.reduce((s,c)=>s+c.price*c.qty,0).toLocaleString('pt-AO')} Kz`)}`, '_blank');
+  }, 500);
+}
+
+// MODAL
+function openModal(id) {
+  const p = products.find(x => x.id === id);
+  currentProduct = p;
+  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalCat').textContent = p.cat.toUpperCase();
+  document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalPrice').textContent = p.price.toLocaleString('pt-AO') + ' Kz';
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('productModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('productModal')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('productModal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentProduct = null;
+}
+
+function selectSize(btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function selectColor(btn) {
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// CONTACT
+function submitContact() {
+  showToast('Mensagem enviada com sucesso! ✓');
+}
+
+// MOBILE NAV
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// FADE IN
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx-4}px, ${my-4}px)`;
+});
+function animRing() {
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  ring.style.transform = `translate(${rx-18}px, ${ry-18}px)`;
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.product-card,.cat-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='60px'; ring.style.height='60px'; ring.style.opacity='0.3'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.opacity='0.6'; });
+});
+
+// LOADER
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('done');
+  }, 2200);
+});
+
+// INIT
+renderProducts();
+updateCartUI();
+</script>
+</body>
+</html>
